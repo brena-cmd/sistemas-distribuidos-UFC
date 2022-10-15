@@ -3,22 +3,25 @@ import java.util.Scanner;
 import java.io.*;
 
 public class TCPServer {
-	public static void main (String args[]) {
-		try{
-			int serverPort = 7896; 
+	public static void main(String args[]) {
+		try {
+			int serverPort = 7896;
 			ServerSocket listenSocket = new ServerSocket(serverPort);
-			while(true) {
+			while (true) {
 				Socket clientSocket = listenSocket.accept();
 				System.out.println("Cliente conectado do IP: " + clientSocket.getInetAddress().getHostAddress());
 				Connection c = new Connection(clientSocket);
-				while(true){
+				while (true) {
 					System.out.println(c.getIn().readUTF());
 					System.out.print("Digite uma mensagem: ");
 					Scanner msg = new Scanner(System.in);
 					c.getOut().writeUTF("Mensagem Servidor: " + msg.nextLine());
+					msg.close();
 				}
 			}
-		} catch(IOException e) {System.out.println("Listen :"+e.getMessage());}
+		} catch (IOException e) {
+			System.out.println("Listen :" + e.getMessage());
+		}
 	}
 }
 

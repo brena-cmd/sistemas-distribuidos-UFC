@@ -2,33 +2,60 @@ import java.net.*;
 import java.io.*;
 
 public class TCPServer {
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
+		ServerSocket listenSocket = null;
 		try {
 			int serverPort = 7896;
-			ServerSocket listenSocket = new ServerSocket(serverPort);
+			listenSocket = new ServerSocket(serverPort);
 
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
 				Connection c = new Connection(clientSocket);
+
+				String[] newData = c.getIn().readUTF().split(",");
+				String op = newData[0];
+				Float num1 = Float.parseFloat(newData[1]);
+				Float num2 = Float.parseFloat(newData[2]);
+				Float res = 0f;
+
+				switch(op){
+					case "ADD":
+						res = soma(num1, num2);
+						break;
+					case "SUB":
+						res = sub(num1, num2);
+						break;
+					case "MULT":
+						res = mult(num1, num2);
+						break;
+					case "DIV":
+						res = div(num1, num2);
+						break;
+				}
+
+				String result = "O resultado da operação " + op + " entre " + num1 + " e " + num2 + " é: " + res;
+				c.getOut().writeUTF(result);
 			}
 		} catch (IOException e) {
 			System.out.println("Listen :" + e.getMessage());
+		} finally{
+			listenSocket.close();
 		}
 	}
 
-	public float soma(float a, float b) {
+	public static float soma(float a, float b) {
 		return a + b;
 	}
 
-	public float sub(float a, float b) {
+	public static float sub(float a, float b) {
 		return a - b;
 	}
 
-	public float mult(float a, float b) {
+	public static float mult(float a, float b) {
 		return a * b;
 	}
 
-	public float div(float a, float b) throws ArithmeticException{
+	public static float div(float a, float b) throws ArithmeticException{
 		float res = 0;
 		try{
 			res = a/b;
@@ -36,23 +63,6 @@ public class TCPServer {
 			System.out.println(e.getMessage());
 		}
 		return res;
-	}
-	
-	public int fat(int a){
-		int res=1;
-		while(a>1){
-				res*=a;
-				a-=1;
-		}
-		return res;
-	}
-
-	public int exp(int a, int b){
-		int exp = a;
-		for(int i = 0; i < b; i++){
-			exp *= a;
-		}
-		return exp;
 	}
 }
 
@@ -83,8 +93,15 @@ class Connection extends Thread {
 		} finally {
 			try {
 				clientSocket.close();
-			} catch (IOException e) {
-				/* close failed */}
+			} catch (IOException e) {}
 		}
+	}
+
+	public DataInputStream getIn(){
+		return this.in;
+	}
+
+	public DataOutputStream getOut(){
+		return this.out;
 	}
 }

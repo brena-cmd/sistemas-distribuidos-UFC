@@ -16,7 +16,7 @@ public class TCPClient {
 			while (true) {
 				System.out.print("Digite uma mensagem: ");
 				out.writeUTF(msg.nextLine());
-				//System.out.println(in.readUTF());
+				System.out.println(in.readUTF());
 			}
 		} catch (UnknownHostException e) {
 			System.out.println("Sock:" + e.getMessage());

@@ -3,24 +3,21 @@ import java.util.Scanner;
 import java.io.*;
 
 public class TCPServer {
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
+		ServerSocket listenSocket = null;
 		try {
 			int serverPort = 7896;
-			ServerSocket listenSocket = new ServerSocket(serverPort);
+			listenSocket = new ServerSocket(serverPort);
+
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
 				System.out.println("Cliente conectado do IP: " + clientSocket.getInetAddress().getHostAddress());
 				Connection c = new Connection(clientSocket);
-				while (true) {
-					System.out.println(c.getIn().readUTF());
-					System.out.print("Digite uma mensagem: ");
-					Scanner msg = new Scanner(System.in);
-					c.getOut().writeUTF("Mensagem Servidor: " + msg.nextLine());
-					msg.close();
-				}
 			}
 		} catch (IOException e) {
 			System.out.println("Listen :" + e.getMessage());
+		} finally{
+			listenSocket.close();
 		}
 	}
 }
@@ -35,7 +32,7 @@ class Connection extends Thread {
 			clientSocket = aClientSocket;
 			in = new DataInputStream(clientSocket.getInputStream());
 			out = new DataOutputStream(clientSocket.getOutputStream());
-			// this.start();
+			this.start();
 		} catch (IOException e) {
 			System.out.println("Connection:" + e.getMessage());
 		}
@@ -43,8 +40,13 @@ class Connection extends Thread {
 
 	public void run() {
 		try {
-			String data = in.readUTF();
-			out.writeUTF(data);
+			Scanner msg = new Scanner(System.in);
+				
+			while (true) {
+				System.out.println(this.in.readUTF());
+				System.out.print("Digite uma mensagem: ");
+				this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
+			}
 		} catch (EOFException e) {
 			System.out.println("EOF:" + e.getMessage());
 		} catch (IOException e) {
@@ -55,13 +57,5 @@ class Connection extends Thread {
 			} catch (IOException e) {
 				/* close failed */}
 		}
-	}
-
-	public DataInputStream getIn() {
-		return this.in;
-	}
-
-	public DataOutputStream getOut() {
-		return this.out;
 	}
 }

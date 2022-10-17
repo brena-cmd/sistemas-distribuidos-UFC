@@ -12,13 +12,11 @@ public class TCPClient {
 			DataInputStream in = new DataInputStream(s.getInputStream());
 			DataOutputStream out = new DataOutputStream(s.getOutputStream());
 			Scanner msg = new Scanner(System.in);
-
+			
 			while (true) {
 				System.out.print("Digite uma mensagem: ");
-				out.writeUTF("Mensagem Cliente: " + msg.nextLine()); // UTF is a string encoding see Sn 4.3
-				String data = in.readUTF();
-				System.out.println(data);
-				msg.close();
+				out.writeUTF("Mensagem do cliente: " + msg.nextLine());
+				System.out.println(in.readUTF());
 			}
 		} catch (UnknownHostException e) {
 			System.out.println("Sock:" + e.getMessage());

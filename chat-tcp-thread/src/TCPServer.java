@@ -9,12 +9,11 @@ public class TCPServer {
 		try {
 			int serverPort = 7896;
 			listenSocket = new ServerSocket(serverPort);
-			ArrayList<Connection> clients = new ArrayList<Connection>();
 
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
 				Connection c = new Connection(clientSocket);
-				clients.add(c);
+				//clients.add(c);
 			}
 		} catch (IOException e) {
 			System.out.println("Listen :" + e.getMessage());
@@ -42,12 +41,12 @@ class Connection extends Thread {
 
 	public void run() {
 		try {
-			Scanner msg = new Scanner(System.in);
+			//Scanner msg = new Scanner(System.in);
 				
 			while (true) {
 				System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
-				System.out.println("Digite uma mensagem para o cliente " + clientSocket.getInetAddress().getHostAddress() + ": ");
-				this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
+				// System.out.println("Digite uma mensagem para o cliente " + clientSocket.getInetAddress().getHostAddress() + ": ");
+				// this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
 			}
 		} catch (EOFException e) {
 			System.out.println("EOF:" + e.getMessage());

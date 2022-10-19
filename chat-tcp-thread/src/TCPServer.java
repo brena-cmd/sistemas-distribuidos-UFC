@@ -11,7 +11,9 @@ public class TCPServer {
 
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
-				new Connection(clientSocket);
+				Connection c = new Connection(clientSocket);
+				System.out.println("\nConectado ao cliente " + clientSocket.getInetAddress().getHostAddress());
+				System.out.println("--------Chat iniciado--------");
 			}
 		} catch (IOException e) {
 			System.out.println("Listen :" + e.getMessage());
@@ -46,6 +48,10 @@ class Connection extends Thread {
 		while(true){
 			try {
 				System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
+			} catch (SocketException e){
+				System.out.println("\nO cliente " + clientSocket.getInetAddress().getHostAddress() + " foi desconectado.");
+				System.out.println("-------Chat finalizado-------");
+				return;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -54,11 +60,14 @@ class Connection extends Thread {
 
 	public void write(){
 		Scanner msg = new Scanner(System.in);
-
+	
 		while(true){
 			try {
-				//System.out.println("Digite uma mensagem para o cliente: ");
+				//System.out.print("\rDigite uma mensagem: ");
 				this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
+			} catch (SocketException e){
+				System.out.println("Chat finalizado por não há um cliente conectado.");
+				return;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -23,7 +23,10 @@ public class TCPClient {
 	public static void read(Socket clientSocket, DataInputStream in){
 		while(true){
 			try {
-				System.out.println(in.readUTF());
+				System.out.println("\r" + in.readUTF());
+			} catch (SocketException e){
+				System.out.println("\rServidor desconectado!");
+				System.exit(0);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -35,7 +38,11 @@ public class TCPClient {
 
 		while(true){
 			try {
+				//System.out.print("\rDigite uma mensagem: ");
 				out.writeUTF(msg.nextLine());
+			} catch (SocketException e){
+				System.out.println("\rServidor desconectado!");
+				System.exit(0);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

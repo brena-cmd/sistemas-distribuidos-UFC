@@ -1,5 +1,4 @@
 import java.net.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 
@@ -12,8 +11,7 @@ public class TCPServer {
 
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
-				Connection c = new Connection(clientSocket);
-				//clients.add(c);
+				new Connection(clientSocket);
 			}
 		} catch (IOException e) {
 			System.out.println("Listen :" + e.getMessage());
@@ -40,23 +38,30 @@ class Connection extends Thread {
 	}
 
 	public void run() {
-		try {
-			//Scanner msg = new Scanner(System.in);
-				
-			while (true) {
-				System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
-				// System.out.println("Digite uma mensagem para o cliente " + clientSocket.getInetAddress().getHostAddress() + ": ");
-				// this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
-			}
-		} catch (EOFException e) {
-			System.out.println("EOF:" + e.getMessage());
-		} catch (IOException e) {
-			System.out.println("IO:" + e.getMessage());
-		} finally {
+		new Thread(()->read()).start();
+		new Thread(()->write()).start();
+	}
+
+	public void read(){
+		while(true){
 			try {
-				clientSocket.close();
+				System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
 			} catch (IOException e) {
-				/* close failed */}
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void write(){
+		Scanner msg = new Scanner(System.in);
+
+		while(true){
+			try {
+				//System.out.println("Digite uma mensagem para o cliente: ");
+				this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -44,7 +44,7 @@ public class TCPClient {
 				System.out.println("\rServidor desconectado!");
 				System.exit(0);
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}

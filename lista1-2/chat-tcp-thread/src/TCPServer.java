@@ -5,6 +5,7 @@ import java.io.*;
 public class TCPServer {
 	public static void main(String args[]) throws IOException {
 		ServerSocket listenSocket = null;
+
 		try {
 			int serverPort = 7896;
 			listenSocket = new ServerSocket(serverPort);
@@ -13,7 +14,6 @@ public class TCPServer {
 				Socket clientSocket = listenSocket.accept();
 				Connection c = new Connection(clientSocket);
 				System.out.println("\nConectado ao cliente " + clientSocket.getInetAddress().getHostAddress());
-				System.out.println("--------Chat iniciado--------");
 			}
 		} catch (IOException e) {
 			System.out.println("Listen :" + e.getMessage());
@@ -40,66 +40,19 @@ class Connection extends Thread {
 	}
 
 	public void run() {
-		new Thread(()->read()).start();
-		new Thread(()->write()).start();
-		// read();
-		// write();
+		new Thread(()->op()).start();
 	}
 
-	public void read(){
+	public void op(){
 		while(true){
-			if(!clientSocket.isClosed()){
-				try {
-					System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-				}
-			}
-			else{
+			try {
+				System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
+			}catch (SocketException e){ 
 				System.out.println("\nO cliente " + clientSocket.getInetAddress().getHostAddress() + " foi desconectado.");
-				System.out.println("-------Chat finalizado-------");
-				break;
+				System.out.println("-------Operação finalizada-------");
+			}catch (IOException e) {
+				e.printStackTrace();
 			}
-
-			// try {
-			// 	System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
-			// } catch (SocketException e){
-			// 	System.out.println("\nO cliente " + clientSocket.getInetAddress().getHostAddress() + " foi desconectado.");
-			// 	System.out.println("-------Chat finalizado-------");
-			// 	return;
-			// } catch (IOException e) {
-			// 	e.printStackTrace();
-			// }
-		}
-	}
-
-	public void write(){
-		Scanner msg = new Scanner(System.in);
-	
-		while(true){
-			if(!clientSocket.isClosed()){
-				try {
-					this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			else{
-				System.out.println("Chat finalizado por não há um cliente conectado.");
-				break;
-			}
-
-			// try {
-			// 	//System.out.print("\rDigite uma mensagem: ");
-			// 	this.out.writeUTF("Mensagem do servidor: " + msg.nextLine());
-			// } catch (SocketException e){
-			// 	System.out.println("Chat finalizado por não há um cliente conectado.");
-			// 	return;
-			// } catch (IOException e) {
-			// 	e.printStackTrace();
-			// }
 		}
 	}
 }

@@ -1,6 +1,7 @@
 import java.net.*;
-import java.util.Scanner;
 import java.io.*;
+import services.Calculadora;
+import services.Conversor;
 
 public class TCPServer {
 	public static void main(String args[]) throws IOException {
@@ -9,6 +10,7 @@ public class TCPServer {
 		try {
 			int serverPort = 7896;
 			listenSocket = new ServerSocket(serverPort);
+			System.out.println("Padrão de Mensagens:\nSERVIÇO, OPERAÇÃO, OP1, OP2");
 
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
@@ -17,7 +19,7 @@ public class TCPServer {
 			}
 		} catch (IOException e) {
 			System.out.println("Listen :" + e.getMessage());
-		} finally{
+		} finally {
 			listenSocket.close();
 		}
 	}
@@ -39,18 +41,39 @@ class Connection extends Thread {
 		}
 	}
 
-	public void run() {
-		new Thread(()->op()).start();
+	public void run(String op) {
+		new Thread(() -> calc()).start();
+		new Thread(() -> conv()).start();
 	}
 
-	public void op(){
-		while(true){
+	public void calc() {
+		while (true) {
 			try {
-				System.out.println("Mensagem do cliente " + clientSocket.getInetAddress().getHostAddress() + ": " + this.in.readUTF());
-			}catch (SocketException e){ 
+				String[] data = this.in.readUTF().split(",");
+				if (data[0] == "CALC") {
+					Calculadora calc = new Calculadora();
+					this.out.writeUTF(calc.calcular(data[1], Float.parseFloat(data[2]), Float.parseFloat(data[3])));
+				}
+			} catch (SocketException e) {
 				System.out.println("\nO cliente " + clientSocket.getInetAddress().getHostAddress() + " foi desconectado.");
-				System.out.println("-------Operação finalizada-------");
-			}catch (IOException e) {
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void conv() {
+		while (true) {
+			try {
+				String[] data = this.in.readUTF().split(",");
+				if (data[0] == "CONV") {
+					Conversor conv = new Conversor();
+					this.out.writeUTF(conv.converter(data[1], Float.parseFloat(data[2])));
+					
+				}
+			} catch (SocketException e) {
+				System.out.println("\nO cliente " + clientSocket.getInetAddress().getHostAddress() + " foi desconectado.");
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

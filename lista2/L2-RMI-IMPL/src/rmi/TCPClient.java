@@ -8,22 +8,7 @@ public class TCPClient {
 	private int serverPort;
 	private DataInputStream in;
 	private DataOutputStream out;
-//	public static void main(String args[]) {
-//		try {
-//			int serverPort = 7896;
-//			final Socket s = new Socket("localhost", serverPort);
-//			DataInputStream in = new DataInputStream(s.getInputStream());
-//			DataOutputStream out = new DataOutputStream(s.getOutputStream());
-//			new Thread(()->write(out)).start();
-//			new Thread(()->read(s, in)).start();
-//		} catch (UnknownHostException e) {
-//			System.out.println("Sock:" + e.getMessage());
-//		} catch (EOFException e) {
-//			System.out.println("EOF:" + e.getMessage());
-//		} catch (IOException e) {
-//			System.out.println("IO:" + e.getMessage());
-//		}
-//	}
+
 	public TCPClient(String IP, int PORT ) {
 		try {
 			this.serverPort = PORT;

@@ -33,6 +33,7 @@ public class ProxyCalculadora {
 		
 	}
 	public void close() {
+		
 		getClient().close();
 	}
 	public String buildRequest(String op, float val1, float val2 ) {

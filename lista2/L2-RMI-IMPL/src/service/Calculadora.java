@@ -1,32 +1,24 @@
 package service;
 
 public class Calculadora {
-    public Calculadora(){}
-
-//	public String calcular(String op, float a, float b){
-//        switch(op){
-//			case "ADD":
-//				return a + " + " + b + " = " + (a + b);
-//			case "SUB":
-//				return a + " - " + b + " = " + (a - b);
-//			case "MULT":
-//				return a + " * " + b + " = " + (a * b);
-//			case "DIV":
-//				return a + " + " + b + " = " + div(a, b);
-//        }
-//
-//		return "Operação inválida.";
-//    }
-	
-	public static float soma(float a, float b) {
+	private static Calculadora uniqueInstance;
+    private Calculadora(){}
+    
+    public static synchronized Calculadora getInstance() {
+    	if(uniqueInstance==null)
+    		uniqueInstance = new Calculadora();
+    	return uniqueInstance;
+    }
+    
+	public float soma(float a, float b) {
 		return a + b;
 	}
 
-	public static float sub(float a, float b) {
+	public float sub(float a, float b) {
 		return a - b;
 	}
 
-	public static float mult(float a, float b) {
+	public float mult(float a, float b) {
 		return a * b;
 	}
 

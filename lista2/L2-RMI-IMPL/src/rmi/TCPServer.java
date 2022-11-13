@@ -44,47 +44,14 @@ class Connection extends Thread {
 	}
 
 	public void run() {
-		Calculadora calc = new Calculadora();
-		Conversor conv = new Conversor();
+		Despachante desp = new Despachante();
 		while(true) {
 			String msg = getRequest();
 			if(msg.equals("sair")) return;
-			String[] data = msg.split(",");
-			if(data[0].equals("CALC")) {
-
-					System.out.println("Calculando...");
-					float res=0;
-					float val1 = Float.parseFloat(data[2]);
-					float val2 = Float.parseFloat(data[3]);
-					switch(data[1]){
-						case "ADD":
-							res = calc.soma(val1, val2);
-						break;
-						case "SUB":
-							res = calc.sub(val1, val2);
-						break;
-						case "MULT":
-							res = calc.mult(val1, val2);
-						break;
-						case "DIV":
-							res = calc.div(val1, val2);
-						break;
-						default:
-							sendResponse("Operacao invalida!");
-							//this.out.writeUTF("Operacao invalida!");
-						break;
-						
-			        }
-					sendResponse(data[2]+data[1]+data[3]+"="+res);
-					//this.out.writeUTF(data[2]+data[1]+data[3]+"="+res);
-				
-			}
-			else if(data[0].equals("CONV")) {
-					//this.out.writeUTF(conv.converter(data[1], Float.parseFloat(data[2])));
-				sendResponse(conv.converter(data[1], Float.parseFloat(data[2])));
-					
-			}
+			String res = desp.invoke(msg);
+			sendResponse(res);
 		}
+			
 	}
 		
 	public String getRequest() {

@@ -10,8 +10,7 @@ public class User {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Escolha o servico que deseja:\n"
 				+ "1-Calculadora\n"
-				+ "2-Conversor de moeda\n"
-				+ "3-Sair");
+				+ "2-Sair");
 		int op;
 		ProxyCalculadora calc = new ProxyCalculadora();
 		do {
@@ -23,7 +22,6 @@ public class User {
 				System.out.println("Digite a operacao no seguinte formato: VAL OP VAL"); //3 + 5
 				req = sc.nextLine();
 				String msg[] = req.split(" ");
-				req = "";
 				float val1=0;
 				float val2=0;
 				switch(msg[1]) {

@@ -1,18 +1,14 @@
 package br.com.ufc.cliente;
 
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+
+import com.google.gson.Gson;
 
 import br.com.ufc.controller.AlunoController;
 import br.com.ufc.controller.EmprestimoController;
 import br.com.ufc.controller.LivroController;
 import br.com.ufc.controller.UnidadeController;
-import br.com.ufc.dao.ServidorDAO;
-import br.com.ufc.model.Aluno;
-import br.com.ufc.model.Emprestimo;
-import br.com.ufc.model.Servidor;
-import br.com.ufc.model.Unidade;
-import com.google.gson.Gson;
 
 public class Proxy {
 	private LivroController conLivro;
@@ -20,63 +16,74 @@ public class Proxy {
 	private EmprestimoController conEmprestimo;
 	private UnidadeController conUnidade;
 	private Scanner obj;
-	Gson gson = new Gson();	
+	private int requestID=1;
+	Gson gson = new Gson();
 	
-	public boolean login(String senha, int siape) {
+	public byte[] doOperation(String objRef, String methodId, byte[] args) {
 		Mensagem msg = new Mensagem();
-		msg.setOp("login");
-		msg.setValues(senha);
-		msg.setValues(String.valueOf(siape));
+		msg.setMessageType(0);
+		msg.setRequestId(this.requestID);
+		msg.setObjectReference(objRef);
+		msg.setMethodId(methodId);
 		
+		String arguments = new String(args);
+		String[] args_sep = arguments.split(",");
+		
+		for(String a:args_sep) {
+			msg.setArgs(a);
+		}
+		
+		//mensagem empacotada
 		String json = gson.toJson(msg);
+		//envia para servidor
+		//recebe do servidor
+		//desempacota resposta
 		
-		return true;
+		//incrementa do requestID
+		requestID+=1;
+		
+		//retorna a resposta do servidor
+		byte[] res = "".getBytes();
+		return res;
 	}
 	
-	public void buscarLivro(String titulo) {
-		Mensagem msg = new Mensagem();
-		msg.setOp("buscarLivro");
-		msg.setValues(titulo);
+	public boolean login(String senha, int siape) {
+		String args = senha+","+String.valueOf(siape);
+		byte[] res = doOperation("servidor","login",args.getBytes());
+		String response = new String(res, StandardCharsets.UTF_8);
 		
-		String json = gson.toJson(msg);
+		//se a response for true retorna true, se não retorna false
+		//fazer isso depois que souber como o servidor retorna.
+		return true;
+	}
+	//add retorno
+	public void buscarLivro(String titulo) {
+		byte[] res = doOperation("servidor","login",titulo.getBytes());
+		String response = new String(res, StandardCharsets.UTF_8);
 	}
 	
 	public void listarAcervo() {
-		Mensagem msg = new Mensagem();
-		msg.setOp("listarAcervo");
-		
-		String json = gson.toJson(msg);
+		byte [] args = "".getBytes();
+		byte[] res = doOperation("servidor","listarAcervo",args);
 	}
 	
 	public void cadastrarLivro() {
-		Mensagem msg = new Mensagem();
-		msg.setOp("cadastrarLivro");
-		
-		String json = gson.toJson(msg);
+		byte [] args = "".getBytes();
+		byte[] res = doOperation("servidor","cadastrarLivro",args);
 	}
 	
 	public void cadastrarAluno() {
-		Mensagem msg = new Mensagem();
-		msg.setOp("cadastrarAluno");
-		
-		String json = gson.toJson(msg);
+		byte [] args = "".getBytes();
+		byte[] res = doOperation("servidor","cadastrarAluno",args);
 	}
 	
 	public void alugar(int numAcv, int matricula) {
-		Mensagem msg = new Mensagem();
-		msg.setOp("alugar");
-		msg.setValues(String.valueOf(numAcv));
-		msg.setValues(String.valueOf(matricula));
-		
-		String json = gson.toJson(msg);
+		byte [] args = (""+numAcv+","+matricula).getBytes();
+		byte[] res = doOperation("servidor","alugar",args);
 	}
 	
 	public void receberEmprestimo(int id, int matricula) {
-		Mensagem msg = new Mensagem();
-		msg.setOp("receberEmprestimo");
-		msg.setValues(String.valueOf(id));
-		msg.setValues(String.valueOf(matricula));
-		
-		String json = gson.toJson(msg);
+		byte [] args = (""+id+","+matricula).getBytes();
+		byte[] res = doOperation("servidor","receberEmprestimo",args);
 	}
 }

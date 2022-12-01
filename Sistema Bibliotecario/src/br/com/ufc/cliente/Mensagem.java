@@ -3,19 +3,53 @@ package br.com.ufc.cliente;
 import java.util.ArrayList;
 
 public class Mensagem {
-	private String op;
-	private ArrayList<String> values;
+	private int messageType;
+	private int requestId;
+	private String objectReference;
+	private String methodId;
+	private ArrayList<String> args;
 	
-	public String getOp() {
-		return op;
+	public int getMessageType() {
+		return messageType;
 	}
-	public void setOp(String op) {
-		this.op = op;
+	public void setMessageType(int messageType) {
+		this.messageType = messageType;
 	}
-	public ArrayList<String> getValues() {
-		return values;
+	public int getRequestId() {
+		return requestId;
 	}
-	public void setValues(String value) {
-		this.values.add(value);
+	public void setRequestId(int requestId) {
+		this.requestId = requestId;
 	}
+	public String getObjectReference() {
+		return objectReference;
+	}
+	public void setObjectReference(String objectReference) {
+		this.objectReference = objectReference;
+	}
+	public String getMethodId() {
+		return methodId;
+	}
+	public void setMethodId(String methodId) {
+		this.methodId = methodId;
+	}
+	public ArrayList<String> getArgs() {
+		return args;
+	}
+	public void setArgs(String args) {
+		this.args.add(args);
+	}
+	
+//	public String getOp() {
+//		return op;
+//	}
+//	public void setOp(String op) {
+//		this.op = op;
+//	}
+//	public ArrayList<String> getValues() {
+//		return values;
+//	}
+//	public void setValues(String value) {
+//		this.values.add(value);
+//	}
 }

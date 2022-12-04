@@ -32,53 +32,37 @@ public class AlunoController {
 		return false;
 	}
 	
-	public void cadastrarAluno() {
-		Usuario usuario = new Usuario();
+	public boolean cadastrarAluno(String nome, String senha, String email, String cpf, String data_nasc, String rua, String numero, String cidade, String estado, int matricula, String curso, String ddd, String num) {
 		Aluno aluno = new Aluno();
-		int qtd;
-		System.out.println("------------Cadastro Aluno------------");
-		System.out.print("Nome: ");
-		usuario.setNome(obj.nextLine());
-		System.out.print("Senha: ");
-		usuario.setSenha(obj.nextLine());
-		System.out.print("E-mail: ");
-		usuario.setEmail(obj.nextLine());
-		System.out.print("CPF: ");
-		usuario.setCpf(obj.nextLine());
-		System.out.print("Data de Nascimento(yyyy-mm-dd): ");
-		usuario.setDataNasc(obj.nextLine());
-		System.out.print("Rua: ");
-		usuario.setRua(obj.nextLine());
-		System.out.print("Numero: ");
-		usuario.setNumero(obj.nextLine());
-		System.out.print("Cidade: ");
-		usuario.setCidade(obj.nextLine());
-		System.out.print("Estado: ");
-		usuario.setEstado(obj.nextLine());
-		System.out.print("Matricula: ");
-		aluno.setMatricula(obj.nextInt());
-		System.out.print("Curso: ");
-		aluno.setCurso(obj.nextLine());
-		aluno.setCurso(obj.nextLine());
-		System.out.print("Quantos telefones deseja inserir? ");
-		qtd = obj.nextInt();
-		for(int a = 0; a < qtd; a++) {
-			Telefone telefone = new Telefone();
-			System.out.print("DDD: ");
-			telefone.setDdd(obj.nextLine());
-			telefone.setDdd(obj.nextLine());
-			System.out.print("Número, lembre-se do 9: ");
-			telefone.setNumero(obj.nextLine());
-			usuario.setTelefone(telefone);
-		}
-		if(alunodao.inserir(usuario, aluno)) {
-			if(conTelefone.inserir(usuario)) {
-				System.out.println("Aluno " + usuario.getNome() + " cadastrado com sucesso!");
+		
+		aluno.setNome(nome);
+		aluno.setSenha(senha);
+		aluno.setEmail(email);
+		aluno.setCpf(cpf);
+		aluno.setDataNasc(data_nasc);
+		aluno.setRua(rua);
+		aluno.setNumero(numero);
+		aluno.setCidade(cidade);
+		aluno.setEstado(estado);
+		aluno.setMatricula(matricula);
+		aluno.setCurso(curso);
+		
+		Telefone telefone = new Telefone();
+		telefone.setDdd(ddd);
+		telefone.setNumero(num);
+		aluno.setTelefone(telefone);			
+		
+		if(alunodao.inserir(aluno, aluno)) {
+			if(conTelefone.inserir(aluno)) {
+//				System.out.println("Aluno " + aluno.getNome() + " cadastrado com sucesso!");
+				return true;
 			}else {
-				System.out.println("Erro, aluno não cadastrado.");
+//				System.out.println("Erro, aluno não cadastrado.");
+				return false;
 			}
 		}else {
-			System.out.println("Erro, aluno não cadastrado.");
+//			System.out.println("Erro, aluno não cadastrado.");
+			return false;
 		}
 	}
 	

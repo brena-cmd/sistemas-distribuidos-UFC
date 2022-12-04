@@ -20,55 +20,59 @@ public class LivroController {
 		this.conUnidade = new UnidadeController();
 	}
 	
-	public void buscar(String titulo){
+	public ArrayList<String> buscar(String titulo){
 		ArrayList<Livro> livros = livrodao.buscar(titulo);
+		
 		if(livros != null)
-			listarEspecificos(livros);
+			return listarEspecificos(livros);
 		else
 			System.out.println("Livro não encontrado.");
+		return null;
 	}
 	
-	public void listarEspecificos(ArrayList<Livro> livros) {
+	public ArrayList<String> listarEspecificos(ArrayList<Livro> livros) {
+		ArrayList<String> res = new ArrayList<String>();
 		System.out.println("");
 		for(int a = 0; a < livros.size(); a++) {
-			System.out.println("Livro " + (a + 1) + ": " + livros.get(a).getTitulo());
-			System.out.println("\t " + livros.get(a).getEdicao());
-			System.out.println("\t " + livros.get(a).getAno_lancamento());
+			res.add((livros.get(a).toString()));
+//			System.out.println("Livro " + (a + 1) + ": " + livros.get(a).getTitulo());
+//			System.out.println("\t " + livros.get(a).getEdicao());
+//			System.out.println("\t " + livros.get(a).getAno_lancamento());
 		}
+		return res;
 	}
 	
-	public void listarAll() {
+	public ArrayList<String> listarAll() {
 		ArrayList<Livro> livros = livrodao.listarLivros();
+		ArrayList<String> res = new ArrayList<String>();
 		if(livros != null) {
 			System.out.println("");
 			for(int a = 0; a < livros.size(); a++) {
-				System.out.println("Livro " + (a + 1) + ": " + livros.get(a).getTitulo());
-				System.out.println("\t " + livros.get(a).getEdicao());
-				System.out.println("\t " + livros.get(a).getAno_lancamento());
+				res.add((livros.get(a).toString()));
+//				System.out.println("Livro " + (a + 1) + ": " + livros.get(a).getTitulo());
+//				System.out.println("\t " + livros.get(a).getEdicao());
+//				System.out.println("\t " + livros.get(a).getAno_lancamento());
+				
 			}
+			return res;
 		}else
 			System.out.println("Nenhum livro no acervo.");
+		return null;
 	}
 	
-	public void cadastrarLivro() {
+	public boolean cadastrarLivro(String titulo, int numAcv, int edicao, String ano_lancamento, int quantidade) {
 		Livro livro = new Livro();
-		System.out.println("------------Cadastro Livros------------");
-		System.out.print("Titulo: ");
-		livro.setTitulo(obj.nextLine());
-		System.out.print("Número do acervo: ");
-		livro.setNumAcv(obj.nextInt());
-		System.out.print("Edição: ");
-		livro.setEdicao(obj.nextInt());
-		System.out.print("Ano de Lançamento: ");
-		livro.setAno_lancamento(obj.nextLine());
-		livro.setAno_lancamento(obj.nextLine());
-		System.out.print("Quantidade de livros: ");
-		livro.setQuantidade(obj.nextInt());
-		if(!livrodao.inserir(livro))
-			System.out.println("Ouve um erro na inserção deste livro.");
-		else if(!conUnidade.inserir(livro))
-			System.out.println("Ouve um erro na inserção das unidades deste livro.");
-		else
-			System.out.println("O livro " + livro.getTitulo() + " e suas unidades fora inseridas corretamente!");
+		livro.setTitulo(titulo);
+		livro.setNumAcv(numAcv);
+		livro.setEdicao(edicao);
+		livro.setAno_lancamento(ano_lancamento);
+		livro.setQuantidade(quantidade);
+		
+		if(!livrodao.inserir(livro) || conUnidade.inserir(livro)) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 }

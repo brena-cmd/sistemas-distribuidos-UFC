@@ -6,87 +6,55 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 import br.com.ufc.connection.ConnectionPSQL;
-import br.com.ufc.controller.*;
-import br.com.ufc.model.*;
 
 public class User {
 	private Scanner obj;
-	private AlunoController conAluno;
-	private ServidorController conServidor;
-	Aluno alunoLogado = new Aluno();
-	Servidor servidorLogado = new Servidor();
-	Proxy proxy = new Proxy();
+	
+	//private ServidorController conServidor;
+//	Aluno alunoLogado = new Aluno();
+//	Servidor servidorLogado = new Servidor();
+	//Proxy proxy = new Proxy();
+	private Proxy conServidor;
 	
 	public User() {
 		this.obj = new Scanner(System.in);
-		this.conAluno = new AlunoController();
-		this.conServidor = new ServidorController();
-		this.proxy = new Proxy();
+		this.conServidor = new Proxy();
+		//this.conServidor = new ServidorController();
+		//this.proxy = new Proxy();
 	}
 	
 	public void telaLogin() throws ParseException {
 		int opcao;
 		System.out.println("\n------------Login------------");
-		System.out.println("\n	1 - Aluno");
-		System.out.println("	2 - Servidor");
-		System.out.println("	3 - Sair");
+		System.out.println("\n	1 - Servidor");
+		System.out.println("	2 - Sair");
 		System.out.println("\n-----------------------------");
 		System.out.print("\nDigite a opção desejada: ");
 		
 		do {
 			opcao = obj.nextInt();
-			if(opcao == 1) {
-				loginAluno();
-				break;
-			}else if(opcao == 2) {
+			switch(opcao) {
+			case 1:
 				loginServidor();
 				break;
-			}else if(opcao == 3)
+			case 2:
 				System.exit(0);
-			else 
+				break;
+			default:
 				System.out.print("Opção inválida, digite novamente: ");
+				break;
+			}
+				
 		}while(true);
 	} 
-	
-	public void loginAluno() throws ParseException {
-		int opcao;
-		System.out.println("\n------------Aluno------------");
-		System.out.print("\nMatricula: ");
-		alunoLogado.setMatricula(obj.nextInt());
-		System.out.print("Senha: ");
-		alunoLogado.setSenha(obj.nextLine());
-		alunoLogado.setSenha(obj.nextLine());
-		System.out.println("\n	1 - Login");
-		System.out.println("	2 - Voltar");
-		System.out.println("\n-----------------------------");
-		System.out.print("\nDigite a opção desejada: ");
-		
-		do {
-			opcao = obj.nextInt();
-			if(opcao == 1) {
-				if(conAluno.login(alunoLogado.getSenha(), alunoLogado.getMatricula()))
-					menuAluno();
-				else {
-					System.out.println("Senha ou matrícula inválida. Tente novamente mais tarde.");
-					telaLogin();
-					break;
-				}
-			}else if(opcao == 2) {
-				telaLogin();
-				break;
-			}else 
-				System.out.print("Opção inválida, digite novamente: ");
-		}while(true);
-	}
-	
+
 	public void loginServidor() throws ParseException {
 		int opcao;
 		System.out.println("\n------------Servidor------------");
 		System.out.print("\nSiape: ");
-		servidorLogado.setSiape(obj.nextInt());
+		int siape = obj.nextInt();
 		System.out.print("Senha: ");
-		servidorLogado.setSenha(obj.nextLine());
-		servidorLogado.setSenha(obj.nextLine());
+		String senha = obj.nextLine();
 		System.out.println("\n	1 - Login");
 		System.out.println("	2 - Voltar");
 		System.out.println("\n--------------------------------");
@@ -95,7 +63,7 @@ public class User {
 		do {
 			opcao = obj.nextInt();
 			if(opcao == 1) {
-				if(conServidor.login(servidorLogado.getSenha(), servidorLogado.getSiape()))
+				if(conServidor.login(senha, siape))
 					menuServidor();
 				else {
 					System.out.println("Senha ou matrícula inválida. Tente novamente mais tarde.");
@@ -111,43 +79,6 @@ public class User {
 		}while(true);
 	}
 	
-	public void menuAluno() throws ParseException {
-		int opcao;
-		System.out.println("\n------------Menu Aluno------------");
-		System.out.println("\n	1 - Meus livros");
-		System.out.println("	2 - Pesquisar livros");
-		System.out.println("	3 - Sair");
-		System.out.println("\n----------------------------------");
-		System.out.print("\nDigite a opção desejada: ");
-		
-		do {
-			opcao = obj.nextInt();
-			if(opcao == 1) {
-				if(!conAluno.listarEmprestimos(alunoLogado))
-					menuAluno();
-				else {
-					int opcao1;
-					System.out.println("\n\t 1 - Renovar");
-					System.out.println("\t 2 - Voltar");
-					System.out.print("\nDigite a opção: ");
-					opcao1 = obj.nextInt();
-					if(opcao1 == 1) {
-						conAluno.renovarEmprestimo(alunoLogado);
-						menuAluno();
-					}else
-						menuAluno();
-				}
-				break;
-			}else if(opcao == 2) {
-				conAluno.buscarLivro();
-				menuAluno();
-			}else if(opcao == 3) {
-				telaLogin();
-				break;
-			}else 
-				System.out.print("Opção inválida, digite novamente: ");
-		}while(true);
-	}
 	
 	public void menuServidor() throws ParseException {
 		int opcao;
@@ -163,7 +94,9 @@ public class User {
 		do {
 			opcao = obj.nextInt();
 			if(opcao == 1) {
-				conServidor.listarAcervo();
+				for(String acv:conServidor.listarAcervo()) {
+					System.out.println(acv);
+				}
 				menuServidor();
 				break;
 			}else if(opcao == 2) {
@@ -173,7 +106,11 @@ public class User {
 				id = obj.nextInt();
 				System.out.print("Digite a matricula do aluno: ");
 				matricula = obj.nextInt();
-				conServidor.receberEmprestimo(id, matricula);
+				if(conServidor.receberEmprestimo(id, matricula)) {
+					System.out.println("Entregue com sucesso!");
+				}else {
+					System.out.println("Erro ao entregar livro!");
+				}
 				menuServidor();
 				break;
 			}else if(opcao == 3) {
@@ -183,7 +120,9 @@ public class User {
 				String titulo;
 				System.out.print("Digite o titulo do livro que deseja buscar: ");
 				titulo = obj.nextLine();
-				conServidor.buscarLivro(titulo);
+				for(String livro : conServidor.buscarLivro(titulo)) {
+					System.out.println(livro);
+				}
 				menuServidor();
 				break;
 			}else if(opcao == 5) {
@@ -207,10 +146,59 @@ public class User {
 		do {
 			opcao = obj.nextInt();
 			if(opcao == 1) {
-				conServidor.cadastrarAluno();
+				System.out.println("------------Cadastro Aluno------------");
+				System.out.print("Nome: ");
+				String nome = obj.nextLine();
+				System.out.print("Senha: ");
+				String senha = obj.nextLine();
+				System.out.print("E-mail: ");
+				String email = obj.nextLine();
+				System.out.print("CPF: ");
+				String cpf = obj.nextLine();
+				System.out.print("Data de Nascimento(yyyy-mm-dd): ");
+				String data_nasc = obj.nextLine();
+				System.out.print("Rua: ");
+				String rua = obj.nextLine();
+				System.out.print("Numero: ");
+				String numero = obj.nextLine();
+				System.out.print("Cidade: ");
+				String cidade = obj.nextLine();
+				System.out.print("Estado: ");
+				String estado = obj.nextLine();
+				System.out.print("Matricula: ");
+				int matricula = obj.nextInt();
+				System.out.print("Curso: ");
+				String curso = obj.nextLine();
+				System.out.print("DDD: ");
+				String ddd = obj.nextLine();
+				System.out.print("Número, lembre-se do 9: ");
+				String num = obj.nextLine();
+				
+				boolean suc_cad = conServidor.cadastrarAluno(nome, senha, email, cpf, data_nasc, rua, numero, cidade, estado, matricula, curso, ddd, num);
+				if(suc_cad) {
+					System.out.println("Aluno cadastrado com sucesso!");
+				}else {
+					System.out.println("Erro ao cadastrar aluno!");
+				}
 				cadastros();
 			}else if(opcao == 2) {
-				conServidor.cadastrarLivro();
+				System.out.println("------------Cadastro Livros------------");
+				System.out.print("Titulo: ");
+				String titulo = obj.nextLine();
+				System.out.print("Número do acervo: ");
+				int numAcv = obj.nextInt();
+				System.out.print("Edição: ");
+				int edicao = obj.nextInt();
+				System.out.print("Ano de Lançamento: ");
+				String ano_lancamento = obj.nextLine();
+				System.out.print("Quantidade de livros: ");
+				int quantidade = obj.nextInt();
+				boolean suc_cad_livro = conServidor.cadastrarLivro(titulo, numAcv, edicao, ano_lancamento, quantidade);
+				if(suc_cad_livro) {
+					System.out.println("Livro cadastrado com sucesso!");
+				}else {
+					System.out.println("Erro ao cadastrar livro!");
+				}
 				cadastros();
 			}else if(opcao == 3) {
 				int numAcv;
@@ -219,7 +207,12 @@ public class User {
 				numAcv = obj.nextInt();
 				System.out.print("Digite o número da matrícula: ");
 				matricula = obj.nextInt();
-				conServidor.alugar(numAcv, matricula);
+				boolean suc_alugar = conServidor.alugar(numAcv, matricula);
+				if(suc_alugar) {
+					System.out.println("Livro alugado com sucesso!");
+				}else {
+					System.out.println("Erro ao alugar livro!");
+				}
 				cadastros();
 			}else if(opcao == 4) {
 				menuServidor();

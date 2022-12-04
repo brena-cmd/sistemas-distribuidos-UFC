@@ -1,4 +1,4 @@
-package br.com.ufc.cliente;
+package br.com.ufc.message;
 
 import java.util.ArrayList;
 
@@ -38,6 +38,9 @@ public class Mensagem {
 	}
 	public void setArgs(String args) {
 		this.args.add(args);
+	}
+	public void setArgs(ArrayList<String> args) {
+		this.args=args;
 	}
 	
 //	public String getOp() {

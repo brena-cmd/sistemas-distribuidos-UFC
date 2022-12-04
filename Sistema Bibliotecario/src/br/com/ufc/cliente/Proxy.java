@@ -1,24 +1,17 @@
 package br.com.ufc.cliente;
 
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import br.com.ufc.controller.AlunoController;
-import br.com.ufc.controller.EmprestimoController;
-import br.com.ufc.controller.LivroController;
-import br.com.ufc.controller.UnidadeController;
+import br.com.ufc.message.Mensagem;
 
 public class Proxy {
-	private LivroController conLivro;
-	private AlunoController conAluno;
-	private EmprestimoController conEmprestimo;
-	private UnidadeController conUnidade;
-	private Scanner obj;
 	private int requestID=1;
-	Gson gson = new Gson();
-	
+	private Gson gson = new Gson();
 	public byte[] doOperation(String objRef, String methodId, byte[] args) {
 		Mensagem msg = new Mensagem();
 		msg.setMessageType(0);
@@ -35,55 +28,113 @@ public class Proxy {
 		
 		//mensagem empacotada
 		String json = gson.toJson(msg);
-		//envia para servidor
-		//recebe do servidor
+		//envia para servidor e recebe do servidor
+		byte[] response = UDPCliente.sendRequest(json);
 		//desempacota resposta
+		String responseUnpacked = new String(response, StandardCharsets.UTF_8);
+		msg = gson.fromJson(responseUnpacked, Mensagem.class);
+	
+		//Transforma a lista de args em JSON
+		Type type = new TypeToken<ArrayList<String>>() {}.getType();
+		String jsonArgs = gson.toJson(msg.getArgs(), type);
 		
 		//incrementa do requestID
 		requestID+=1;
 		
-		//retorna a resposta do servidor
-		byte[] res = "".getBytes();
-		return res;
+		//retorna os argumentos da resposta para o metodo proxy em JSON
+		return jsonArgs.getBytes();
+	}
+	
+	public ArrayList<String> jsonToArray(String json){
+		Type type = (new TypeToken<ArrayList<String>>() {}).getType();
+		ArrayList<String> b = gson.fromJson(json, type);
+		return b;
 	}
 	
 	public boolean login(String senha, int siape) {
 		String args = senha+","+String.valueOf(siape);
 		byte[] res = doOperation("servidor","login",args.getBytes());
+		
 		String response = new String(res, StandardCharsets.UTF_8);
 		
+		ArrayList<String> arrArgs = jsonToArray(response);
+		
 		//se a response for true retorna true, se não retorna false
-		//fazer isso depois que souber como o servidor retorna.
-		return true;
+		if(arrArgs.get(0).equals("true"))
+			return true;
+		else
+			return false;
 	}
-	//add retorno
-	public void buscarLivro(String titulo) {
+
+	public ArrayList<String>  buscarLivro(String titulo) {
 		byte[] res = doOperation("servidor","login",titulo.getBytes());
 		String response = new String(res, StandardCharsets.UTF_8);
+		
+		return jsonToArray(response);
 	}
 	
-	public void listarAcervo() {
+	public ArrayList<String> listarAcervo() {
 		byte [] args = "".getBytes();
 		byte[] res = doOperation("servidor","listarAcervo",args);
+		
+		String response = new String(res, StandardCharsets.UTF_8);
+		
+		return jsonToArray(response);
 	}
 	
-	public void cadastrarLivro() {
-		byte [] args = "".getBytes();
+	public boolean cadastrarLivro(String titulo, int numAcv, int edicao, String ano_lancamento, int quantidade) {
+		byte[] args = (titulo + "," + String.valueOf(numAcv) + "," + String.valueOf(edicao) + "," + ano_lancamento + "," + String.valueOf(quantidade)).getBytes();
 		byte[] res = doOperation("servidor","cadastrarLivro",args);
+		
+		String response = new String(res, StandardCharsets.UTF_8);
+		ArrayList<String> arrArgs = jsonToArray(response);
+		
+		//se a response for true retorna true, se não retorna false
+		if(arrArgs.get(0).equals("true"))
+			return true;
+		else
+			return false;
 	}
 	
-	public void cadastrarAluno() {
-		byte [] args = "".getBytes();
+	public boolean cadastrarAluno(String nome, String senha, String email, String cpf, String data_nasc, String rua, String numero, String cidade, String estado, int matricula, String curso, String ddd, String num) {
+		byte[] args = (nome + "," + senha + "," + email + "," + cpf + "," + data_nasc + "," + rua + "," + numero + "," + cidade + "," + estado + "," + matricula + "," + curso + "," + ddd  + "," + num).getBytes();
 		byte[] res = doOperation("servidor","cadastrarAluno",args);
+		
+		String response = new String(res, StandardCharsets.UTF_8);
+		ArrayList<String> arrArgs = jsonToArray(response);
+		
+		//se a response for true retorna true, se não retorna false
+		if(arrArgs.get(0).equals("true"))
+			return true;
+		else
+			return false;
 	}
 	
-	public void alugar(int numAcv, int matricula) {
+	public boolean alugar(int numAcv, int matricula) {
 		byte [] args = (""+numAcv+","+matricula).getBytes();
 		byte[] res = doOperation("servidor","alugar",args);
+		
+		String response = new String(res, StandardCharsets.UTF_8);
+		ArrayList<String> arrArgs = jsonToArray(response);
+		
+		//se a response for true retorna true, se não retorna false
+		if(arrArgs.get(0).equals("true"))
+			return true;
+		else
+			return false;
 	}
 	
-	public void receberEmprestimo(int id, int matricula) {
+	public boolean receberEmprestimo(int id, int matricula) {
 		byte [] args = (""+id+","+matricula).getBytes();
 		byte[] res = doOperation("servidor","receberEmprestimo",args);
+		
+		String response = new String(res, StandardCharsets.UTF_8);
+		ArrayList<String> arrArgs = jsonToArray(response);
+		
+		//se a response for true retorna true, se não retorna false
+		if(arrArgs.get(0).equals("true"))
+			return true;
+		else
+			return false;
 	}
 }

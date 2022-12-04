@@ -1,7 +1,6 @@
 package br.com.ufc.controller;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import br.com.ufc.connection.ConnectionPSQL;
 import br.com.ufc.dao.*;
@@ -32,20 +31,20 @@ public class ServidorController {
 		return false;
 	}
 	
-	public void buscarLivro(String titulo) {
-		conLivro.buscar(titulo);
+	public ArrayList<String> buscarLivro(String titulo) {
+		return conLivro.buscar(titulo);
 	}
 	
-	public void listarAcervo() {
-		conLivro.listarAll();
+	public ArrayList<String> listarAcervo() {
+		return conLivro.listarAll();
 	}
 	
-	public void cadastrarLivro() {
-		conLivro.cadastrarLivro();
+	public boolean cadastrarLivro(String titulo, int numAcv, int edicao, String ano_lancamento, int quantidade) {
+		return conLivro.cadastrarLivro(titulo, numAcv, edicao, ano_lancamento, quantidade);
 	}
 	
-	public void cadastrarAluno() {
-		conAluno.cadastrarAluno();
+	public boolean cadastrarAluno(String nome, String senha, String email, String cpf, String data_nasc, String rua, String numero, String cidade, String estado, int matricula, String curso, String ddd, String num) {
+		return conAluno.cadastrarAluno(nome, senha, email, cpf, data_nasc, rua, numero, cidade, estado, matricula, curso, ddd, num);
 	}
 	
 	public boolean alugar(int numAcv, int matricula) {
@@ -70,20 +69,6 @@ public class ServidorController {
 		}
 		
 		return false;
-		
-//		if(!verificador) {
-//			System.out.println("Livro não disponível. Gostaria de realizar uma reserva?");
-//			System.out.println("\t 1 - Sim");
-//			System.out.println("\t 2 - Não");
-//			System.out.print("Digite a opção: ");
-//			int opcao;
-//			opcao = obj.nextInt();
-//			
-//			if(opcao == 1) {
-//				conEmprestimo.reservar(numAcv, matricula);
-//			}else
-//				return;
-//		}
 	}
 	
 	public boolean receberEmprestimo(int id, int matricula) {

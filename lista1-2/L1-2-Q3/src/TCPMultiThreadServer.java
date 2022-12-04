@@ -32,7 +32,7 @@ class Connection extends Thread {
 			out = new DataOutputStream(clientSocket.getOutputStream());
 			this.start();
 			Thread.sleep(100);
-		} catch(InterruptedException e){
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println("Connection:" + e.getMessage());
@@ -43,9 +43,9 @@ class Connection extends Thread {
 		try {
 			Calculadora calc = new Calculadora();
 			String[] newData = this.in.readUTF().split(",");
-			float a = Float.parseFloat(newData[1]), b = Float.parseFloat(newData[2]), res = (float)0.0;
+			float a = Float.parseFloat(newData[1]), b = Float.parseFloat(newData[2]), res = (float) 0.0;
 
-			switch(newData[0]){
+			switch (newData[0]) {
 				case "ADD":
 					res = calc.soma(a, b);
 					break;

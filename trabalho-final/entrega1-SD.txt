@@ -1,0 +1,118 @@
+Equipe: Andreina Mendes
+		Brena Rodrigues - 497367
+		
+Serviço remoto: Sistema de Biblioteca
+
+Métodos
+
+-------AlunoController-----------
+Login
+	Entrada
+		Senha (String), matrícula (String)
+	Saida
+		Boolean (True se o login foi bem sucedido, False se o aluno não foi encontrado no BD)
+		
+Cadastrar aluno
+	Entrada
+		Nome, senha, email, cpf, data de nascimento, rua, numero, cidade, estado, matrícula, curso, telefone.
+	Saida
+		Void. (Imprime uma mensagem de erro caso o aluno não seja inserido com sucesso).
+		
+Buscar livro
+	Entrada
+		Titulo
+	Saida
+		Lista de livros com o titulo
+		
+listarEmprestimos
+	Entrada
+		Aluno
+	Saida
+		Boolean
+		
+renovarEmprestimo
+	Entrada
+		objeto Aluno
+	Saida
+		void
+		
+buscar
+	Entrada
+		Matrícula
+	Saida
+		objeto Aluno
+		
+-------EmprestimoController-----------	
+
+listarEmprestimos		
+	Entrada
+		objeto Aluno
+	Saida
+		boolean
+
+getEmprestimos
+	Entrada
+		objeto Aluno
+	Saida
+		Lista de objeto Emprestimo
+		
+renovarEmprestimo
+	Entrada
+		objeto Emprestimo
+	Saida
+		void
+
+removerEmprestimo
+	Entrada
+		objeto Emprestimo
+	Saida
+		void
+
+getDebito
+	Entrada
+		objeto Emprestimo
+	Saida
+		int
+
+pegarData
+	Entrada
+		nada
+	Saida
+		Data atual (string)
+
+alugar
+	Entrada
+		Objeto aluno, objeto unidade
+	Saida
+		void
+		
+reservar
+	Entrada
+		numacv, matricula
+	Saida
+		void
+		
+------LivroController-----------		
+buscar
+	Entrada
+		titulo
+	Saida
+		void
+		
+listarEspecificos
+	Entrada
+		Lista de livros
+	Saida
+		void
+
+listarAll
+	Entrada
+		nada
+	Saida
+		Imprime os todos os livros do BD
+
+cadastrarLivro
+	Entrada
+		Titulo, numacv, edicao, ano lancamento, quantidade
+	Saida
+		Imprime ma mensagem de confirmação

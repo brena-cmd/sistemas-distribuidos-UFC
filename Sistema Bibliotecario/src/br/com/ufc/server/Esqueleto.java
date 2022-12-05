@@ -70,6 +70,19 @@ public class Esqueleto {
 		response.setArgs(String.valueOf(res));
 		return empacotaMensagem(response);
 	}
+
+	public byte[] cadastrarUnidade(String args) {
+		String[] args_sep = args.split(",");
+		int numReg= Integer.parseInt(args_sep[0]);
+		int numAcv = Integer.parseInt(args_sep[1]);
+		
+		boolean res = servidor.cadastrarUnidade(numReg, numAcv);
+		
+		Mensagem response = new Mensagem();
+		response.setMessageType(1);
+		response.setArgs(String.valueOf(res));
+		return empacotaMensagem(response);
+	}
 	
 	public byte[] cadastrarAluno(String args) {
 		String[] args_sep = args.split(",");

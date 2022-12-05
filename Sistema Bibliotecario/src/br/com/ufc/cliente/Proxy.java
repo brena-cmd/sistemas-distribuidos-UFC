@@ -1,11 +1,13 @@
 package br.com.ufc.cliente;
 
+import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import br.com.ufc.message.Mensagem;
 
@@ -30,9 +32,12 @@ public class Proxy {
 		String json = gson.toJson(msg);
 		//envia para servidor e recebe do servidor
 		byte[] response = UDPCliente.sendRequest(json);
+
 		//desempacota resposta
 		String responseUnpacked = new String(response, StandardCharsets.UTF_8);
-		msg = gson.fromJson(responseUnpacked, Mensagem.class);
+		JsonReader reader = new JsonReader(new StringReader(responseUnpacked));
+		reader.setLenient(true);
+		msg = gson.fromJson(reader, Mensagem.class);
 	
 		//Transforma a lista de args em JSON
 		Type type = new TypeToken<ArrayList<String>>() {}.getType();
@@ -46,13 +51,16 @@ public class Proxy {
 	}
 	
 	public ArrayList<String> jsonToArray(String json){
+		JsonReader reader = new JsonReader(new StringReader(json));
+		reader.setLenient(true);
 		Type type = (new TypeToken<ArrayList<String>>() {}).getType();
-		ArrayList<String> b = gson.fromJson(json, type);
+		ArrayList<String> b = gson.fromJson(reader, type);
+
 		return b;
 	}
 	
 	public boolean login(String senha, int siape) {
-		String args = senha+","+String.valueOf(siape);
+		String args = senha + ',' + String.valueOf(siape);
 		byte[] res = doOperation("servidor","login",args.getBytes());
 		
 		String response = new String(res, StandardCharsets.UTF_8);
@@ -95,6 +103,20 @@ public class Proxy {
 		else
 			return false;
 	}
+
+	public boolean cadastrarUnidade(int numReg, int numAcv) {
+		byte[] args = (String.valueOf(numReg) + "," + String.valueOf(numAcv)).getBytes();
+		byte[] res = doOperation("servidor","cadastrarUnidade",args);
+		
+		String response = new String(res, StandardCharsets.UTF_8);
+		ArrayList<String> arrArgs = jsonToArray(response);
+		
+		//se a response for true retorna true, se não retorna false
+		if(arrArgs.get(0).equals("true"))
+			return true;
+		else
+			return false;
+	}
 	
 	public boolean cadastrarAluno(String nome, String senha, String email, String cpf, String data_nasc, String rua, String numero, String cidade, String estado, int matricula, String curso, String ddd, String num) {
 		byte[] args = (nome + "," + senha + "," + email + "," + cpf + "," + data_nasc + "," + rua + "," + numero + "," + cidade + "," + estado + "," + matricula + "," + curso + "," + ddd  + "," + num).getBytes();
@@ -125,7 +147,7 @@ public class Proxy {
 	}
 	
 	public boolean receberEmprestimo(int id, int matricula) {
-		byte [] args = (""+id+","+matricula).getBytes();
+		byte [] args = (id+","+matricula).getBytes();
 		byte[] res = doOperation("servidor","receberEmprestimo",args);
 		
 		String response = new String(res, StandardCharsets.UTF_8);

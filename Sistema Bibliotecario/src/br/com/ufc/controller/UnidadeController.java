@@ -18,16 +18,12 @@ public class UnidadeController {
 		this.obj = new Scanner(System.in);
 	}
 	
-	public boolean inserir(Livro livro) {
-		for(int a = 0; a < livro.getQuantidade(); a++) {
-			Unidade unidade = new Unidade();
-			System.out.println("Unidade " + (a + 1) + ":");
-			System.out.print("Numero de registro: ");
-			unidade.setNumReg(obj.nextInt());
-			unidade.setNumAcv(livro.getNumAcv());
-			if(!unidadedao.inserir(unidade))
-				return false;
-		}
+	public boolean cadastrarUnidade(int numReg, int numAcv) {
+		Unidade unidade = new Unidade();
+		unidade.setNumReg(numReg);
+		unidade.setNumAcv(numAcv);
+		if(!unidadedao.inserir(unidade))
+			return false;
 		return true;
 	}
 	

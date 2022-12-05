@@ -54,14 +54,11 @@ public class AlunoController {
 		
 		if(alunodao.inserir(aluno, aluno)) {
 			if(conTelefone.inserir(aluno)) {
-//				System.out.println("Aluno " + aluno.getNome() + " cadastrado com sucesso!");
 				return true;
 			}else {
-//				System.out.println("Erro, aluno não cadastrado.");
 				return false;
 			}
 		}else {
-//			System.out.println("Erro, aluno não cadastrado.");
 			return false;
 		}
 	}

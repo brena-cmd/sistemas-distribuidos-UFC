@@ -5,22 +5,16 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import br.com.ufc.message.*;
 
 public class Teste {
-public static void main(String[] args) {
-	Gson gson = new Gson();
-	ArrayList<String> a = new ArrayList<String>();
-	
-	a.add(String.valueOf(true));
-	
-	String json = gson.toJson(a);
-	
-	System.out.println(json);
-	
-	Type type = (new TypeToken<ArrayList<String>>() {}).getType();
-	ArrayList<String> b = gson.fromJson(json, type);
-	
-	System.out.println(b);
-	
-}
+	public static void main(String[] args) {
+		Gson gson = new Gson();
+
+		String s = "{\"messageType\":0,\"requestId\":1,\"objectReference\":\"servidor\",\"methodId\":\"login\",\"args\":[\"1234\",\"1\"]}";
+
+		Mensagem msg = gson.fromJson(s, Mensagem.class);
+		System.out.println(msg.getArgs());
+		System.out.println(msg.getMethodId());
+	}
 }

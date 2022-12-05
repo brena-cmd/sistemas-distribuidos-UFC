@@ -70,7 +70,7 @@ public class EmprestimoController {
         return formatador.format(dataAgora);
     }
 	
-	public void alugar(Aluno aluno, Unidade unidade) {
+	public boolean alugar(Aluno aluno, Unidade unidade) {
 		Emprestimo emprestimo = new Emprestimo();
 		emprestimo.setMatricula(aluno.getMatricula());
 		emprestimo.setNumReg(unidade.getNumReg());
@@ -91,7 +91,9 @@ public class EmprestimoController {
 		}
 		
 		if(emprestimodao.inserir(emprestimo))
-			System.out.println("Alugado com sucesso!");
+			return true;
+		
+		return false;
 	}
 	
 	public void reservar(int numacv, int matricula) {

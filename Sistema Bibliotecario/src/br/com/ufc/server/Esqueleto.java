@@ -34,10 +34,10 @@ public class Esqueleto {
 	}
 	
 	public byte[] buscarLivro(String args) {
-		String[] args_sep = args.split(",");
-		String titulo = args_sep[0];
-		
-		ArrayList<String> res = servidor.buscarLivro(titulo);
+//		String[] args_sep = args.split(",");
+//		String titulo = args_sep[0];
+//		
+		ArrayList<String> res = servidor.buscarLivro(args);
 		
 		Mensagem response = new Mensagem();
 		response.setMessageType(1);

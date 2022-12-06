@@ -49,6 +49,7 @@ public class User {
 		System.out.print("Senha: ");
 		obj.nextLine();
 		String senha = obj.nextLine();
+		
 		System.out.println("\n	1 - Login");
 		System.out.println("	2 - Voltar");
 		System.out.println("\n--------------------------------");
@@ -111,6 +112,7 @@ public class User {
 			} else if (opcao == 4) {
 				String titulo;
 				System.out.print("Digite o titulo do livro que deseja buscar: ");
+				titulo = obj.nextLine();
 				titulo = obj.nextLine();
 				if (conServidor.buscarLivro(titulo) != null)
 					for (String livro : conServidor.buscarLivro(titulo))

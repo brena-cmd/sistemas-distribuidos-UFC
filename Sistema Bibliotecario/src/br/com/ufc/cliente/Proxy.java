@@ -75,7 +75,7 @@ public class Proxy {
 	}
 
 	public ArrayList<String>  buscarLivro(String titulo) {
-		byte[] res = doOperation("servidor","login",titulo.getBytes());
+		byte[] res = doOperation("servidor","buscarLivro",titulo.getBytes());
 		String response = new String(res, StandardCharsets.UTF_8);
 		
 		return jsonToArray(response);

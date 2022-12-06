@@ -38,6 +38,9 @@ public class Despachante {
 					case "listarAcervo":
 						res = esq.listarAcervo();
 						break;
+					case "buscarLivro":
+						res = esq.buscarLivro(args);
+						break;
 					case "cadastrarLivro":
 						res = esq.cadastrarLivro(args);
 						break;

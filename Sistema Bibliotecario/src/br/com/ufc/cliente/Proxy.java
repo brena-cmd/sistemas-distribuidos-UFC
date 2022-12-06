@@ -68,7 +68,9 @@ public class Proxy {
 		ArrayList<String> arrArgs = jsonToArray(response);
 		
 		//se a response for true retorna true, se não retorna false
+		
 		if(arrArgs.get(0).equals("true"))
+		
 			return true;
 		else
 			return false;

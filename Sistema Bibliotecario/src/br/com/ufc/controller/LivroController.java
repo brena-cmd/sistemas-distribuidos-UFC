@@ -46,14 +46,7 @@ public class LivroController {
 		return null;
 	}
 
-	public boolean cadastrarLivro(String titulo, int numAcv, int edicao, String ano_lancamento, int quantidade) {
-		Livro livro = new Livro();
-		livro.setTitulo(titulo);
-		livro.setNumAcv(numAcv);
-		livro.setEdicao(edicao);
-		livro.setAno_lancamento(ano_lancamento);
-		livro.setQuantidade(quantidade);
-
+	public boolean cadastrarLivro(Livro livro) {
 		if (livrodao.inserir(livro))
 			return true;
 		else

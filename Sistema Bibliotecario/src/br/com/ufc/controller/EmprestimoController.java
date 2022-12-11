@@ -1,6 +1,5 @@
 package br.com.ufc.controller;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

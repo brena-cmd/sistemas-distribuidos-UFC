@@ -1,7 +1,6 @@
 package br.com.ufc.controller;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import br.com.ufc.connection.ConnectionPSQL;
 import br.com.ufc.dao.*;
@@ -10,29 +9,24 @@ import br.com.ufc.model.*;
 public class UnidadeController {
 	private ConnectionPSQL connectionPSQL;
 	private UnidadeDAO unidadedao;
-	private Scanner obj;
-	
+
 	public UnidadeController() {
 		this.connectionPSQL = new ConnectionPSQL();
 		this.unidadedao = new UnidadeDAO(connectionPSQL);
-		this.obj = new Scanner(System.in);
 	}
-	
-	public boolean cadastrarUnidade(int numReg, int numAcv) {
-		Unidade unidade = new Unidade();
-		unidade.setNumReg(numReg);
-		unidade.setNumAcv(numAcv);
-		if(!unidadedao.inserir(unidade))
+
+	public boolean cadastrarUnidade(Unidade unidade) {
+		if (!unidadedao.inserir(unidade))
 			return false;
 		return true;
 	}
-	
+
 	public Livro buscarRegistro(int reg) {
 		Livro livro = unidadedao.buscar(reg);
 		return livro;
 	}
-	
-	public ArrayList<Unidade> buscarNumAcv(int numacv){
+
+	public ArrayList<Unidade> buscarNumAcv(int numacv) {
 		return unidadedao.listaUnidades(numacv);
 	}
 }

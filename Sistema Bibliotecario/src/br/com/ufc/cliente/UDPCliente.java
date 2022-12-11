@@ -1,17 +1,14 @@
 package br.com.ufc.cliente;
 
 import java.net.*;
-import java.util.ArrayList;
-
-import br.com.ufc.exceptions.ServerUnavaibleException;
-import br.com.ufc.message.Mensagem;
-
 import java.io.*;
 
-public class UDPCliente {
+import br.com.ufc.exceptions.ServerUnavaibleException;
 
+public class UDPCliente {
 	public static byte[] sendRequest(String req) throws ServerUnavaibleException {
 		DatagramSocket aSocket = null;
+
 		try {
 			aSocket = new DatagramSocket();
 			byte[] m = req.getBytes();
@@ -20,28 +17,32 @@ public class UDPCliente {
 			DatagramPacket request = new DatagramPacket(m, m.length, aHost, serverPort);
 			aSocket.send(request);
 			byte[] buffer = new byte[1000];
-			aSocket.setSoTimeout(2000);
-			
-			for(int i=0; i<5; i++) {
+			aSocket.setSoTimeout(1000);
+
+			for (int i = 0; i < 5; i++) {
 				DatagramPacket getack = new DatagramPacket(buffer, buffer.length);
+				
 				try {
 					aSocket.receive(getack);
 				} catch (SocketTimeoutException e) {
-					// resend
 					// Se o timeout expirou entao manda novamente
 					aSocket.send(request);
 					continue;
 				}
+
 				// Se chegar aqui é porque recebeu corretamente
 				return getack.getData();
 			}
-			System.out.println(new ServerUnavaibleException().getMessage());
 			
+			System.out.println(new ServerUnavaibleException().getMessage());
+
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} 
+		} finally {
+			aSocket.close();
+		}
 		return "".getBytes();
 	}
 }

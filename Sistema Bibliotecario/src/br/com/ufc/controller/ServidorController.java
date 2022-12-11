@@ -39,25 +39,25 @@ public class ServidorController {
 		return conLivro.listarAll();
 	}
 
-	public boolean cadastrarLivro(String titulo, int numAcv, int edicao, String ano_lancamento, int quantidade) {
-		return conLivro.cadastrarLivro(titulo, numAcv, edicao, ano_lancamento, quantidade);
+	public boolean cadastrarLivro(Livro livro) {
+		return conLivro.cadastrarLivro(livro);
 	}
 
-	public boolean cadastrarUnidade(int numReg, int numAcv) {
-		return conUnidade.cadastrarUnidade(numReg, numAcv);
+	public boolean cadastrarUnidade(Unidade unidade) {
+		return conUnidade.cadastrarUnidade(unidade);
 	}
 
-	public boolean cadastrarAluno(String nome, String senha, String email, String cpf, String data_nasc, String rua,
-			String numero, String cidade, String estado, int matricula, String curso, String ddd, String num) {
-		return conAluno.cadastrarAluno(nome, senha, email, cpf, data_nasc, rua, numero, cidade, estado, matricula,
-				curso, ddd, num);
+	public boolean cadastrarAluno(Aluno aluno) {
+		return conAluno.cadastrarAluno(aluno);
 	}
 
 	public boolean alugar(int numAcv, int matricula) {
 		Aluno aluno = conAluno.buscar(matricula);
 		ArrayList<Unidade> unidades = conUnidade.buscarNumAcv(numAcv);
 		ArrayList<Emprestimo> emprestimos = conEmprestimo.getEmprestimos();
+
 		boolean verificador = false;
+
 		for (int a = 0; a < unidades.size(); a++) {
 			verificador = true;
 			for (int x = 0; x < emprestimos.size(); x++) {

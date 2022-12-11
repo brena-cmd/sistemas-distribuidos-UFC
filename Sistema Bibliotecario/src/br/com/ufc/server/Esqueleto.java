@@ -1,11 +1,14 @@
 package br.com.ufc.server;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 import br.com.ufc.controller.ServidorController;
 import br.com.ufc.message.Mensagem;
+import br.com.ufc.model.*;
 
 public class Esqueleto {
 	private ServidorController servidor;
@@ -33,10 +36,7 @@ public class Esqueleto {
 		return empacotaMensagem(response);
 	}
 	
-	public byte[] buscarLivro(String args) {
-//		String[] args_sep = args.split(",");
-//		String titulo = args_sep[0];
-//		
+	public byte[] buscarLivro(String args) {		
 		ArrayList<String> res = servidor.buscarLivro(args);
 		
 		Mensagem response = new Mensagem();
@@ -56,14 +56,11 @@ public class Esqueleto {
 	}
 	
 	public byte[] cadastrarLivro(String args) {
-		String[] args_sep = args.split(",");
-		String titulo = args_sep[0];
-		int numAcv = Integer.parseInt(args_sep[1]);
-		int edicao = Integer.parseInt(args_sep[2]);
-		String ano=args_sep[3];
-		int qtd = Integer.parseInt(args_sep[4]);
+		JsonReader reader = new JsonReader(new StringReader(args));
+		reader.setLenient(true);
+		Livro livro = gson.fromJson(reader, Livro.class);
 		
-		boolean res = servidor.cadastrarLivro(titulo, numAcv, edicao, ano, qtd);
+		boolean res = servidor.cadastrarLivro(livro);
 		
 		Mensagem response = new Mensagem();
 		response.setMessageType(1);
@@ -72,11 +69,11 @@ public class Esqueleto {
 	}
 
 	public byte[] cadastrarUnidade(String args) {
-		String[] args_sep = args.split(",");
-		int numReg= Integer.parseInt(args_sep[0]);
-		int numAcv = Integer.parseInt(args_sep[1]);
-		
-		boolean res = servidor.cadastrarUnidade(numReg, numAcv);
+		JsonReader reader = new JsonReader(new StringReader(args));
+		reader.setLenient(true);
+		Unidade unidade = gson.fromJson(reader, Unidade.class);
+
+		boolean res = servidor.cadastrarUnidade(unidade);
 		
 		Mensagem response = new Mensagem();
 		response.setMessageType(1);
@@ -85,22 +82,10 @@ public class Esqueleto {
 	}
 	
 	public byte[] cadastrarAluno(String args) {
-		String[] args_sep = args.split(",");
-		String nome = args_sep[0];
-		String senha = args_sep[1];
-		String email = args_sep[2];
-		String cpf = args_sep[3];
-		String data_nasc = args_sep[4];
-		String rua = args_sep[5];
-		String num = args_sep[6];
-		String cidade = args_sep[7];
-		String estado = args_sep[8];
-		int matricula = Integer.parseInt(args_sep[9]);
-		String curso = args_sep[10];
-		String ddd = args_sep[11];
-		String telefone = args_sep[12];
-
-		boolean res = servidor.cadastrarAluno(nome, senha, email, cpf, data_nasc, rua, num, cidade, estado, matricula, curso, ddd, telefone);
+		JsonReader reader = new JsonReader(new StringReader(args));
+		reader.setLenient(true);
+		Aluno aluno = gson.fromJson(reader, Aluno.class);
+		boolean res = servidor.cadastrarAluno(aluno);
 		Mensagem response = new Mensagem();
 		response.setMessageType(1);
 		response.setArgs(String.valueOf(res));

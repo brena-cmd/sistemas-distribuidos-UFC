@@ -32,28 +32,10 @@ public class AlunoController {
 		return false;
 	}
 	
-	public boolean cadastrarAluno(String nome, String senha, String email, String cpf, String data_nasc, String rua, String numero, String cidade, String estado, int matricula, String curso, String ddd, String num) {
-		Aluno aluno = new Aluno();
-		
-		aluno.setNome(nome);
-		aluno.setSenha(senha);
-		aluno.setEmail(email);
-		aluno.setCpf(cpf);
-		aluno.setDataNasc(data_nasc);
-		aluno.setRua(rua);
-		aluno.setNumero(numero);
-		aluno.setCidade(cidade);
-		aluno.setEstado(estado);
-		aluno.setMatricula(matricula);
-		aluno.setCurso(curso);
-		
-		Telefone telefone = new Telefone();
-		telefone.setDdd(ddd);
-		telefone.setNumero(num);
-		aluno.setTelefone(telefone);			
-		
+	public boolean cadastrarAluno(Aluno aluno) {
 		if(alunodao.inserir(aluno, aluno)) {
 			if(conTelefone.inserir(aluno)) {
+				
 				return true;
 			}else {
 				return false;

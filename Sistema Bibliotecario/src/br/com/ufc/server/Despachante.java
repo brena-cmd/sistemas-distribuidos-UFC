@@ -12,21 +12,19 @@ public class Despachante {
 	}
 
 	public byte[] invoke(Mensagem message) {
-		// String req = new String(message, StandardCharsets.UTF_8);
-		// JsonParser jsonParser = new JsonParser();
-		// JsonObject obj = ((JsonArray)jsonParser.parse(req)).getAsJsonObject();
-		// Gson gson = new Gson();
-		// Mensagem message = gson.fromJson(req, Mensagem.class);
-		//
 		byte[] res = "".getBytes();
-		//
+		
 		ArrayList<String> listaArgs = message.getArgs();
 		String args = "";
-
-		for (int i = 0; i < listaArgs.size(); i++) {
-			args += listaArgs.get(i);
-			if (i != listaArgs.size() - 1)
-				args += ",";
+		
+		if(message.getMethodId().equals("cadastrarAluno") || message.getMethodId().equals("cadastrarLivro")|| message.getMethodId().equals("cadastrarUnidade")){
+			args = listaArgs.get(0);
+		}else{
+			for (int i = 0; i < listaArgs.size(); i++) {
+				args += listaArgs.get(i);
+				if (i != listaArgs.size() - 1)
+					args += ",";
+			}
 		}
 
 		switch (message.getObjectReference()) {
@@ -55,6 +53,7 @@ public class Despachante {
 						break;
 					case "cadastrarUnidade":
 						res = esq.cadastrarUnidade(args);
+						break;
 				}
 				break;
 		}

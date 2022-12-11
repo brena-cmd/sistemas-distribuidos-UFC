@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import br.com.ufc.connection.ConnectionPSQL;
+import br.com.ufc.model.*;
 
 public class User {
 	private Scanner obj;
@@ -50,7 +51,7 @@ public class User {
 		obj.nextLine();
 		System.out.print("Senha: ");
 		String senha = obj.nextLine();
-		
+
 		System.out.println("\n	1 - Login");
 		System.out.println("	2 - Voltar");
 		System.out.println("\n--------------------------------");
@@ -68,8 +69,8 @@ public class User {
 						telaLogin();
 						break;
 					}
-					
-				}catch (Exception e) {
+
+				} catch (Exception e) {
 					// TODO: handle exception
 				}
 				break;
@@ -96,10 +97,10 @@ public class User {
 			opcao = obj.nextInt();
 			if (opcao == 1) {
 				ArrayList<String> acervo = conServidor.listarAcervo();
-				if(acervo != null) {
+				if (acervo != null) {
+					System.out.println("");
 					for (String acv : acervo)
 						System.out.println(acv);
-					
 				}
 				menuServidor();
 				break;
@@ -123,7 +124,6 @@ public class User {
 			} else if (opcao == 4) {
 				String titulo;
 				System.out.print("Digite o titulo do livro que deseja buscar: ");
-				//titulo = obj.nextLine();
 				obj.nextLine();
 				titulo = obj.nextLine();
 				ArrayList<String> busca = conServidor.buscarLivro(titulo);
@@ -153,66 +153,75 @@ public class User {
 		do {
 			opcao = obj.nextInt();
 			if (opcao == 1) {
-				System.out.println("------------Cadastro Aluno------------");
+				Aluno aluno = new Aluno();
+				System.out.println("\n------------Cadastro Aluno------------");
 				obj.nextLine();
 				System.out.print("Nome: ");
-				String nome = obj.nextLine();
+				aluno.setNome(obj.nextLine());
 				System.out.print("Senha: ");
-				String senha = obj.nextLine();
+				aluno.setSenha(obj.nextLine());
 				System.out.print("E-mail: ");
-				String email = obj.nextLine();
+				aluno.setEmail(obj.nextLine());
 				System.out.print("CPF: ");
-				String cpf = obj.nextLine();
+				aluno.setCpf(obj.nextLine());
 				System.out.print("Data de Nascimento(yyyy-mm-dd): ");
-				String data_nasc = obj.nextLine();
+				aluno.setDataNasc(obj.nextLine());
 				System.out.print("Rua: ");
-				String rua = obj.nextLine();
+				aluno.setRua(obj.nextLine());
 				System.out.print("Numero: ");
-				String numero = obj.nextLine();
+				aluno.setNumero(obj.nextLine());
 				System.out.print("Cidade: ");
-				String cidade = obj.nextLine();
+				aluno.setCidade(obj.nextLine());
 				System.out.print("Estado: ");
-				String estado = obj.nextLine();
+				aluno.setEstado(obj.nextLine());
 				System.out.print("Matricula: ");
-				int matricula = obj.nextInt();
+				aluno.setMatricula(obj.nextInt());
 				obj.nextLine();
 				System.out.print("Curso: ");
-				String curso = obj.nextLine();
-				System.out.print("DDD: ");
-				String ddd = obj.nextLine();
-				System.out.print("Número, lembre-se do 9: ");
-				String num = obj.nextLine();
+				aluno.setCurso(obj.nextLine());
 
-				boolean suc_cad = conServidor.cadastrarAluno(nome, senha, email, cpf, data_nasc, rua, numero, cidade,
-						estado, matricula, curso, ddd, num);
-				if (suc_cad) {
+				Telefone tel = new Telefone();
+				System.out.print("DDD: ");
+				tel.setDdd(obj.nextLine());
+				System.out.print("Número, lembre-se do 9: ");
+				tel.setNumero(obj.nextLine());
+
+				aluno.setTelefone(tel);
+
+				if (conServidor.cadastrarAluno(aluno)) {
 					System.out.println("Aluno cadastrado com sucesso!");
 				} else {
 					System.out.println("Erro ao cadastrar aluno!");
 				}
 				cadastros();
 			} else if (opcao == 2) {
-				System.out.println("------------Cadastro Livros------------");
+				Livro livro = new Livro();
+				System.out.println("\n------------Cadastro Livro------------");
 				obj.nextLine();
 				System.out.print("Titulo: ");
-				String titulo = obj.nextLine();
+				livro.setTitulo(obj.nextLine());
 				System.out.print("Número do acervo: ");
-				int numAcv = obj.nextInt();
+				livro.setNumAcv(obj.nextInt());
 				System.out.print("Edição: ");
-				int edicao = obj.nextInt();
+				livro.setEdicao(obj.nextInt());
 				obj.nextLine();
 				System.out.print("Ano de Lançamento: ");
-				String ano_lancamento = obj.nextLine();
+				livro.setAno_lancamento(obj.nextLine());
 				System.out.print("Quantidade de livros: ");
-				int quantidade = obj.nextInt();
-				boolean suc_cad_livro = conServidor.cadastrarLivro(titulo, numAcv, edicao, ano_lancamento, quantidade);
+				int qtd = obj.nextInt();
+
+				boolean suc_cad_livro = conServidor.cadastrarLivro(livro);
+
 				if (suc_cad_livro) {
-					for (int a = 0; a < quantidade; a++) {
+					for (int a = 0; a < qtd; a++) {
+						Unidade unidade = new Unidade();
+						unidade.setNumAcv(livro.getNumAcv());
 						System.out.println("Unidade " + (a + 1) + ":");
 						System.out.print("Numero de registro: ");
-						int numReg = obj.nextInt();
-						if (conServidor.cadastrarUnidade(numReg, numAcv)) {
-							System.out.println("Unidade" + numReg + " cadastrada!");
+						unidade.setNumReg(obj.nextInt());
+
+						if (conServidor.cadastrarUnidade(unidade)) {
+							System.out.println("Unidade" + unidade.getNumReg() + " cadastrada!");
 						}
 					}
 					System.out.println("Livro cadastrado com sucesso!");
@@ -244,7 +253,6 @@ public class User {
 	public static void main(String[] args) {
 		ConnectionPSQL connection = new ConnectionPSQL();
 		Connection a = connection.getConnection();
-		// System.out.println("Conectado");
 
 		User usr = new User();
 

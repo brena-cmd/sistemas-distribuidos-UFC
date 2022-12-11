@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import br.com.ufc.exceptions.ServerUnavaibleException;
 import br.com.ufc.message.Mensagem;
 
 public class Proxy {
@@ -20,29 +21,39 @@ public class Proxy {
 		msg.setRequestId(this.requestID);
 		msg.setObjectReference(objRef);
 		msg.setMethodId(methodId);
-		
 		String arguments = new String(args);
 		String[] args_sep = arguments.split(",");
 		
+		System.out.println(this.requestID);
 		for(String a:args_sep) {
 			msg.setArgs(a);
 		}
 		
 		//mensagem empacotada
 		String json = gson.toJson(msg);
+		
 		//envia para servidor e recebe do servidor
-		byte[] response = UDPCliente.sendRequest(json);
+		byte[] response =  "".getBytes();
+		try {
+			response = UDPCliente.sendRequest(json);				
+		} catch (ServerUnavaibleException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
 
 		//desempacota resposta
 		String responseUnpacked = new String(response, StandardCharsets.UTF_8);
 		JsonReader reader = new JsonReader(new StringReader(responseUnpacked));
 		reader.setLenient(true);
 		msg = gson.fromJson(reader, Mensagem.class);
-	
+		//System.out.println(msg.getArgs());
+		String jsonArgs="";
 		//Transforma a lista de args em JSON
-		Type type = new TypeToken<ArrayList<String>>() {}.getType();
-		String jsonArgs = gson.toJson(msg.getArgs(), type);
-		
+		if(msg!=null) {
+			Type type = new TypeToken<ArrayList<String>>() {}.getType();
+			jsonArgs = gson.toJson(msg.getArgs(), type);
+		}
+
 		//incrementa do requestID
 		requestID+=1;
 		
@@ -61,19 +72,24 @@ public class Proxy {
 	
 	public boolean login(String senha, int siape) {
 		String args = senha + ',' + String.valueOf(siape);
-		byte[] res = doOperation("servidor","login",args.getBytes());
-		
-		String response = new String(res, StandardCharsets.UTF_8);
-		
-		ArrayList<String> arrArgs = jsonToArray(response);
-		
-		//se a response for true retorna true, se não retorna false
-		
-		if(arrArgs.get(0).equals("true"))
-		
-			return true;
-		else
-			return false;
+		try {
+			byte[] res = doOperation("servidor","login",args.getBytes());
+			String response = new String(res, StandardCharsets.UTF_8);
+			
+			ArrayList<String> arrArgs = jsonToArray(response);
+			
+			//se a response for true retorna true, se não retorna false
+			
+			if(arrArgs.get(0).equals("true"))
+			
+				return true;
+			else
+				return false;
+		}catch (Exception e) {
+			// TODO: handle exception
+			//System.out.println(e);
+		}
+		return false;
 	}
 
 	public ArrayList<String>  buscarLivro(String titulo) {

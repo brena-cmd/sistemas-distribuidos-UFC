@@ -3,6 +3,7 @@ package br.com.ufc.cliente;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import br.com.ufc.connection.ConnectionPSQL;
@@ -46,8 +47,8 @@ public class User {
 		System.out.println("\n------------Servidor------------");
 		System.out.print("\nSiape: ");
 		int siape = obj.nextInt();
-		System.out.print("Senha: ");
 		obj.nextLine();
+		System.out.print("Senha: ");
 		String senha = obj.nextLine();
 		
 		System.out.println("\n	1 - Login");
@@ -58,12 +59,18 @@ public class User {
 		do {
 			opcao = obj.nextInt();
 			if (opcao == 1) {
-				if (conServidor.login(senha, siape))
-					menuServidor();
-				else {
-					System.out.println("Senha ou matrícula inválida. Tente novamente mais tarde.");
-					telaLogin();
-					break;
+				try {
+					boolean logged = conServidor.login(senha, siape);
+					if (logged)
+						menuServidor();
+					else {
+						System.out.println("Senha ou matrícula inválida. Tente novamente mais tarde.");
+						telaLogin();
+						break;
+					}
+					
+				}catch (Exception e) {
+					// TODO: handle exception
 				}
 				break;
 			} else if (opcao == 2) {
@@ -88,8 +95,12 @@ public class User {
 		do {
 			opcao = obj.nextInt();
 			if (opcao == 1) {
-				for (String acv : conServidor.listarAcervo())
-					System.out.println(acv);
+				ArrayList<String> acervo = conServidor.listarAcervo();
+				if(acervo != null) {
+					for (String acv : acervo)
+						System.out.println(acv);
+					
+				}
 				menuServidor();
 				break;
 			} else if (opcao == 2) {
@@ -112,10 +123,12 @@ public class User {
 			} else if (opcao == 4) {
 				String titulo;
 				System.out.print("Digite o titulo do livro que deseja buscar: ");
+				//titulo = obj.nextLine();
+				obj.nextLine();
 				titulo = obj.nextLine();
-				titulo = obj.nextLine();
-				if (conServidor.buscarLivro(titulo) != null)
-					for (String livro : conServidor.buscarLivro(titulo))
+				ArrayList<String> busca = conServidor.buscarLivro(titulo);
+				if (busca != null)
+					for (String livro : busca)
 						System.out.println(livro);
 				menuServidor();
 				break;
@@ -185,7 +198,6 @@ public class User {
 				String titulo = obj.nextLine();
 				System.out.print("Número do acervo: ");
 				int numAcv = obj.nextInt();
-				obj.nextLine();
 				System.out.print("Edição: ");
 				int edicao = obj.nextInt();
 				obj.nextLine();

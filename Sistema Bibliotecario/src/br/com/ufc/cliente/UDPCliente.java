@@ -1,48 +1,16 @@
 package br.com.ufc.cliente;
 
 import java.net.*;
+import java.util.ArrayList;
+
+import br.com.ufc.exceptions.ServerUnavaibleException;
+import br.com.ufc.message.Mensagem;
+
 import java.io.*;
 
 public class UDPCliente {
-	// public static void main(String args[]){
-	// args give message contents and server hostname
-	// DatagramSocket aSocket = null;
-	// try {
-	// aSocket = new DatagramSocket();
-	// byte [] m = args[0].getBytes();
-	// InetAddress aHost = InetAddress.getByName(args[1]);
-	// int serverPort = 6789;
-	// DatagramPacket request = new DatagramPacket(m, args[0].length(), aHost,
-	// serverPort);
-	//// aSocket.send(request);
-	// byte[] buffer = new byte[1000];
-	//// DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-	//// aSocket.receive(reply);
-	// aSocket.setSoTimeout(10000);
-	// while(true) {
-	// DatagramPacket getack = new DatagramPacket(buffer, buffer.length);
-	// try {
-	// aSocket.receive(getack);
-	// } catch (SocketTimeoutException e) {
-	// // resend
-	// aSocket.send(request);
-	// continue;
-	// }
-	// // check received data...
-	// }
-	//// System.out.println("Reply: " + new String(reply.getData()));
-	// } catch (SocketException e){
-	// System.out.println("Socket: " + e.getMessage());
-	// } catch (IOException e){
-	// System.out.println("IO: " + e.getMessage());
-	// } finally {
-	// if(aSocket != null) {
-	// aSocket.close();
-	// }
-	// }
-	// }
 
-	public static byte[] sendRequest(String req) {
+	public static byte[] sendRequest(String req) throws ServerUnavaibleException {
 		DatagramSocket aSocket = null;
 		try {
 			aSocket = new DatagramSocket();
@@ -52,8 +20,9 @@ public class UDPCliente {
 			DatagramPacket request = new DatagramPacket(m, m.length, aHost, serverPort);
 			aSocket.send(request);
 			byte[] buffer = new byte[1000];
-			aSocket.setSoTimeout(10000);
-			while (true) {
+			aSocket.setSoTimeout(2000);
+			
+			for(int i=0; i<5; i++) {
 				DatagramPacket getack = new DatagramPacket(buffer, buffer.length);
 				try {
 					aSocket.receive(getack);
@@ -66,16 +35,13 @@ public class UDPCliente {
 				// Se chegar aqui é porque recebeu corretamente
 				return getack.getData();
 			}
-
+			System.out.println(new ServerUnavaibleException().getMessage());
+			
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} finally {
-			if (aSocket != null) {
-				aSocket.close();
-			}
-		}
+		} 
 		return "".getBytes();
 	}
 }
